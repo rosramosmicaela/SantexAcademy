@@ -1,3 +1,14 @@
+<header class="topbar">
+  <a routerLink="/players" class="brand">FIFA Players</a>
+  @if (auth.loggedIn()) {
+    <nav>
+      <a routerLink="/players">Jugadores</a>
+      <a routerLink="/players/new">Crear jugador</a>
+      <button type="button" class="secondary" (click)="logout()">Salir</button>
+    </nav>
+  }
+</header>
 
-<h1>Welcome to the FE</h1>
-<app-player></app-player>
+<main class="container">
+  <router-outlet />
+</main>
