@@ -8,8 +8,8 @@ con backend en Node.js (NestJS + Sequelize), frontend en Angular y base de datos
 Requisito: tener Docker Desktop instalado y abierto.
 
 ```bash
-git clone <URL_DE_ESTE_REPOSITORIO>
-cd football-api
+git clone https://github.com/rosramosmicaela/SantexAcademy.git
+cd SantexAcademy/football-api
 cp .env.sample .env        # en Windows (PowerShell): copy .env.sample .env
 docker compose up
 ```
