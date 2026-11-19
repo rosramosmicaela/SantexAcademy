@@ -20,7 +20,10 @@ import { PlayerDto } from './dto/player.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('players')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('api/players')
 export class PlayersController {
