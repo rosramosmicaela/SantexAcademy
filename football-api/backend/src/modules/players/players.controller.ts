@@ -12,13 +12,16 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { PlayersService } from './players.service';
 import { PlayerDto } from './dto/player.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/players')
 export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
