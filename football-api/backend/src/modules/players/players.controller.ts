@@ -8,7 +8,9 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { PlayersService } from './players.service';
 import { PlayerDto } from './dto/player.dto';
 
@@ -32,6 +34,66 @@ export class PlayersController {
       limit,
     );
     return { ...result, items: result.items.map((p) => new PlayerDto(p)) };
+  }
+
+  // IMPORTANTE: esta ruta tiene que ir ANTES de ':id',
+  // si no, Nest interpreta "export" como un id y da error.
+  @Get('export')
+  async exportPlayers(
+    @Res() res: Response,
+    @Query('name') name?: string,
+    @Query('club') club?: string,
+    @Query('position') position?: string,
+    @Query('fifaVersion') fifaVersion?: string,
+  ) {
+    const players = await this.playersService.getAllFiltered({
+      name,
+      club,
+      position,
+      fifaVersion,
+    });
+
+    const escape = (value: unknown): string => {
+      const text = String(value ?? '');
+      return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    };
+
+    const header = [
+      'id',
+      'name',
+      'club',
+      'position',
+      'nationality',
+      'rating',
+      'speed',
+      'shooting',
+      'dribbling',
+      'passing',
+    ];
+
+    const lines = players.map((p) =>
+      [
+        p.id,
+        p.name,
+        p.club,
+        p.position,
+        p.nationality,
+        p.rating,
+        p.speed,
+        p.shooting,
+        p.dribbling,
+        p.passing,
+      ]
+        .map(escape)
+        .join(','),
+    );
+
+    // \uFEFF hace que Excel muestre bien los acentos
+    const csv = '\uFEFF' + [header.join(','), ...lines].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="players.csv"');
+    res.send(csv);
   }
 
   @Get(':id')

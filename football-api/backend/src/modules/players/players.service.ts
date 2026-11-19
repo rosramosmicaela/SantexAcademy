@@ -34,4 +34,26 @@ export class PlayersService {
       totalPages: Math.ceil(total / safeLimit),
     };
   }
+
+  // Trae TODOS los jugadores que cumplen los filtros (sin paginar),
+  // pidiendo de a 100 hasta completar. Tope de seguridad: 20000.
+  async getAllFiltered(filters: PlayerFilters): Promise<Player[]> {
+    const MAX_ROWS = 20000;
+    const PAGE_SIZE = 100;
+    const all: Player[] = [];
+    let page = 1;
+
+    while (all.length < MAX_ROWS) {
+      const { rows, total } = await this.playerRepository.findPaginated(
+        filters,
+        page,
+        PAGE_SIZE,
+      );
+      all.push(...rows);
+      if (rows.length === 0 || all.length >= total) break;
+      page++;
+    }
+
+    return all;
+  }
 }
