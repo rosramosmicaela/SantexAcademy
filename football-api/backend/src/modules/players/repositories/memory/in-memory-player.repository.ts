@@ -2,6 +2,13 @@ import { Player } from '../../entities/player.entity';
 import { IPlayerRepository } from '../../interfaces/player-repository.interface';
 
 export class InMemoryPlayerRepository implements IPlayerRepository {
+    create(): Promise<never> {
+    throw new Error('Not implemented');
+  }
+
+  update(): Promise<never> {
+    throw new Error('Not implemented');
+  }
   private players: Player[] = [];
 
   findPaginated(): Promise<never> {

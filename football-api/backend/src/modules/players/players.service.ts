@@ -36,6 +36,13 @@ export class PlayersService {
   }
 
   // Trae TODOS los jugadores que cumplen los filtros (sin paginar),
+    createPlayer(data: Partial<Player>): Promise<Player> {
+    return this.playerRepository.create(data);
+  }
+
+  updatePlayer(id: number, data: Partial<Player>): Promise<Player | undefined> {
+    return this.playerRepository.update(id, data);
+  }
   // pidiendo de a 100 hasta completar. Tope de seguridad: 20000.
   async getAllFiltered(filters: PlayerFilters): Promise<Player[]> {
     const MAX_ROWS = 20000;

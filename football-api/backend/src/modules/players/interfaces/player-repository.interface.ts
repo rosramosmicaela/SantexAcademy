@@ -15,6 +15,8 @@ export interface PlayersPage {
 export interface IPlayerRepository {
   findAll(): Promise<Player[]>;
   findOneById(id: number): Promise<Player | undefined>;
+    create(data: Partial<Player>): Promise<Player>;
+  update(id: number, data: Partial<Player>): Promise<Player | undefined>;
   findPaginated(
     filters: PlayerFilters,
     page: number,

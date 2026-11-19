@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   DefaultValuePipe,
   Get,
@@ -7,12 +8,16 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
+  Post,
   Query,
   Res,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { PlayersService } from './players.service';
 import { PlayerDto } from './dto/player.dto';
+import { CreatePlayerDto } from './dto/create-player.dto';
+import { UpdatePlayerDto } from './dto/update-player.dto';
 
 @Controller('api/players')
 export class PlayersController {
@@ -106,6 +111,26 @@ export class PlayersController {
       throw new NotFoundException(`Player with ID ${id} not found.`);
     }
 
+    return new PlayerDto(player);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async createPlayer(@Body() dto: CreatePlayerDto): Promise<PlayerDto> {
+    const player = await this.playersService.createPlayer(dto);
+    return new PlayerDto(player);
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async updatePlayer(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdatePlayerDto,
+  ): Promise<PlayerDto> {
+    const player = await this.playersService.updatePlayer(id, dto);
+    if (!player) {
+      throw new NotFoundException(`Player with ID ${id} not found.`);
+    }
     return new PlayerDto(player);
   }
 }

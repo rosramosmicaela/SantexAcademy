@@ -7,6 +7,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TypeOrmPlayerRepository implements IPlayerRepository {
+    create(): Promise<never> {
+    throw new Error('Not implemented');
+  }
+
+  update(): Promise<never> {
+    throw new Error('Not implemented');
+  }
     findPaginated(): Promise<{ rows: Player[]; total: number }> {
     throw new Error('Not implemented');
   }

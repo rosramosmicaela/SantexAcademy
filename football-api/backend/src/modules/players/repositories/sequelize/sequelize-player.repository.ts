@@ -54,6 +54,53 @@ export class SequelizePlayerRepository implements IPlayerRepository {
 
     return { rows: rows.map((x) => this.mapToEntity(x)), total: count };
   }
+    async create(data: Partial<Player>): Promise<Player> {
+    const rating = data.rating ?? 50;
+    const created = await this.playerModel.create({
+      fifaVersion: data.fifaVersion ?? '23',
+      fifaUpdate: '1',
+      playerFaceUrl: '',
+      longName: data.name,
+      playerPositions: data.position,
+      clubName: data.club,
+      nationalityName: data.nationality,
+      overall: rating,
+      potential: rating,
+      age: 25,
+      pace: data.speed ?? 0,
+      shooting: data.shooting ?? 0,
+      dribbling: data.dribbling ?? 0,
+      passing: data.passing ?? 0,
+      defending: data.defending ?? 0,
+      physic: data.physic ?? 0,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    return this.mapToEntity(created);
+  }
+
+  async update(
+    id: number,
+    data: Partial<Player>,
+  ): Promise<Player | undefined> {
+    const model = await this.playerModel.findByPk(id);
+    if (!model) {
+      return undefined;
+    }
+    if (data.name !== undefined) model.longName = data.name;
+    if (data.club !== undefined) model.clubName = data.club;
+    if (data.position !== undefined) model.playerPositions = data.position;
+    if (data.nationality !== undefined)
+      model.nationalityName = data.nationality;
+    if (data.rating !== undefined) model.overall = data.rating;
+    if (data.speed !== undefined) model.pace = data.speed;
+    if (data.shooting !== undefined) model.shooting = data.shooting;
+    if (data.dribbling !== undefined) model.dribbling = data.dribbling;
+    if (data.passing !== undefined) model.passing = data.passing;
+    if (data.defending !== undefined) model.defending = data.defending;
+    if (data.physic !== undefined) model.physic = data.physic;
+    await model.save();
+    return this.mapToEntity(model);
+  }
   async findOneById(id: number): Promise<Player | undefined> {
     const model = await this.playerModel.findByPk(id);
     if (!model) {
