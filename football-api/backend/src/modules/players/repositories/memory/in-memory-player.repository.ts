@@ -4,6 +4,10 @@ import { IPlayerRepository } from '../../interfaces/player-repository.interface'
 export class InMemoryPlayerRepository implements IPlayerRepository {
   private players: Player[] = [];
 
+  findPaginated(): Promise<never> {
+    throw new Error('Not implemented');
+  }
+
   async findAll(): Promise<Player[]> {
     return Promise.resolve([...this.players]);
   }

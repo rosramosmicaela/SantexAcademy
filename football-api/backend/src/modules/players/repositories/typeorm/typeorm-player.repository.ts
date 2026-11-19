@@ -7,6 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TypeOrmPlayerRepository implements IPlayerRepository {
+    findPaginated(): Promise<{ rows: Player[]; total: number }> {
+    throw new Error('Not implemented');
+  }
   constructor(
     @InjectRepository(PlayerDto)
     private readonly playerRepository: Repository<PlayerDto>,
